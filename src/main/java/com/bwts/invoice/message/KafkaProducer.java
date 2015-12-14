@@ -25,7 +25,7 @@ public class KafkaProducer implements DisposableBean {
         
         Properties producerProps = new Properties();
         producerProps.put("serializer.class", "kafka.serializer.StringEncoder");
-        producerProps.put("zk.connect", "localhost:8888");
+        producerProps.put("zk.connect", url);
         producerProps.put("metadata.broker.list", brokerList);
         
         producer = new Producer<String, String>(new ProducerConfig(producerProps));
