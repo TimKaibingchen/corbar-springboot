@@ -8,6 +8,10 @@
   <artifactId>invoice-upload-service</artifactId>
   <version>0.1.0-SNAPSHOT</version>
 
+  <properties>
+    <bwts.common.version>0.1.5</bwts.common.version>
+  </properties>
+
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
@@ -68,6 +72,51 @@
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
     </dependency>
-  </dependencies>
 
+    <dependency>
+      <groupId>dom4j</groupId>
+      <artifactId>dom4j</artifactId>
+      <version>1.6</version>
+    </dependency>
+
+    <dependency>
+      <groupId>jaxen</groupId>
+      <artifactId>jaxen</artifactId>
+      <version>1.1.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-jdbc</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>9.4-1201-jdbc41</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-dbcp2</artifactId>
+      <version>2.0.1</version>
+      <exclusions>
+        <exclusion>
+          <!-- Using jcl-over-slf4j -->
+          <groupId>commons-logging</groupId>
+          <artifactId>commons-logging</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>com.carbonfive</groupId>
+      <artifactId>db-support</artifactId>
+      <version>0.9.7</version>
+    </dependency>
+    <dependency>
+      <groupId>com.bwts</groupId>
+      <artifactId>bwts-common</artifactId>
+      <version>${bwts.common.version}</version>
+    </dependency>
+  </dependencies>
 </project>
