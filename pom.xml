@@ -9,7 +9,7 @@
   <version>0.1.0-SNAPSHOT</version>
 
   <properties>
-    <bwts.common.version>0.1.5</bwts.common.version>
+    <bwts.common.version>0.1.6</bwts.common.version>
   </properties>
 
   <parent>

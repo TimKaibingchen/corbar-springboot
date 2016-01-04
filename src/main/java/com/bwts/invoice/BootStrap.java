@@ -5,8 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
+import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
+@ComponentScan("com.bwts.common,com.bwts.invoice")
 public class BootStrap extends SpringBootServletInitializer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BootStrap.class);
