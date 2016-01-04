@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.bwts.common.exception.APIException;
 import com.bwts.common.exception.ErrorCode;
-import com.bwts.invoice.Dao.JdbcThirdPartyDao;
+import com.bwts.invoice.dao.JdbcThirdPartyDao;
 import com.bwts.invoice.dto.ThirdPartyDTO;
 import jersey.repackaged.com.google.common.collect.Maps;
 
