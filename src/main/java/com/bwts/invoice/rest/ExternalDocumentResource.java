@@ -40,7 +40,6 @@ public class ExternalDocumentResource {
     }
     
     @POST
-    @Consumes(MediaType.APPLICATION_XML)
     @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
     public Response createDocument(String message, @HeaderParam("BWTS-TOKEN") String token) throws APIException {
         String thirdPartyCode = null;
