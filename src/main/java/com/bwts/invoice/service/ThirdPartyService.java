@@ -63,6 +63,10 @@ public class ThirdPartyService {
 
     public boolean verifyToken(String token) {
         String[] tokenValues = TokenHelper.decodeToken(token);
+        return verifyToken(tokenValues);
+    }
+
+    public boolean verifyToken(String[] tokenValues) {
         if (tokenValues.length != 3) {
             throw new APIException(HttpStatus.FORBIDDEN, ErrorCode.WRONG_TOKEN_FORMAT, "bwts-token format is wrong");
         }
