@@ -6,11 +6,11 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import com.bwts.invoice.exception.ErrorCodes;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.bwts.common.exception.APIException;
-import com.bwts.common.exception.ErrorCode;
 import com.bwts.invoice.dao.JdbcThirdPartyDao;
 import com.bwts.invoice.dto.ThirdPartyDTO;
 import jersey.repackaged.com.google.common.collect.Maps;
@@ -68,7 +68,7 @@ public class ThirdPartyService {
 
     public boolean verifyToken(String[] tokenValues) {
         if (tokenValues.length != 3) {
-            throw new APIException(HttpStatus.FORBIDDEN, ErrorCode.WRONG_TOKEN_FORMAT, "bwts-token format is wrong");
+            throw new APIException(HttpStatus.FORBIDDEN, ErrorCodes.WRONG_TOKEN_FORMAT);
         }
         String code = tokenValues[0];
         String timeValue = tokenValues[1];
@@ -78,7 +78,7 @@ public class ThirdPartyService {
             String secretKey = findSecretKey(thirdParty);
             String expectedSignature = TokenHelper.generateSignature(code, timeValue, secretKey);
             if(!expectedSignature.equals(tokenValues[2])) {
-                throw new APIException(HttpStatus.FORBIDDEN, ErrorCode.TOKEN_SIGNATURE_NOT_MATCHED, "token signature is not matched");
+                throw new APIException(HttpStatus.FORBIDDEN, ErrorCodes.TOKEN_SIGNATURE_NOT_MATCHED);
             }
             return true;
         }
@@ -88,7 +88,7 @@ public class ThirdPartyService {
     private boolean checkTime(long timestamp) {
         Timestamp now = new Timestamp(System.currentTimeMillis());
         if ((now.getTime() - HOUR) > timestamp) {
-            throw new APIException(HttpStatus.FORBIDDEN, ErrorCode.EXPIRED_TOKEN, "token validity is out of date");
+            throw new APIException(HttpStatus.FORBIDDEN, ErrorCodes.EXPIRED_TOKEN);
         }
         return true;
     }
@@ -101,14 +101,14 @@ public class ThirdPartyService {
         if (thirdParties != null && thirdParties.size() == 1) {
             return thirdParties.get(0);
         }
-        throw new APIException(HttpStatus.FORBIDDEN, ErrorCode.THIRD_PARTY_CODE_NOT_EXIST, "third party code doesn't exist");
+        throw new APIException(HttpStatus.FORBIDDEN, ErrorCodes.THIRD_PARTY_CODE_NOT_EXIST);
     }
 
     private String findSecretKey(ThirdPartyDTO thirdParty) {
         if (thirdParty != null && thirdParty.getSecretKey() != null) {
             return thirdParty.getSecretKey();
         }
-        throw new APIException(HttpStatus.FORBIDDEN, ErrorCode.THIRD_PARTY_SECRET_KEY_NULL, "can't find third party secret key");
+        throw new APIException(HttpStatus.FORBIDDEN, ErrorCodes.THIRD_PARTY_SECRET_KEY_NULL);
     }
 
 }
