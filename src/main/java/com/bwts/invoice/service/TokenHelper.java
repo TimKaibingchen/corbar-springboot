@@ -1,14 +1,12 @@
 package com.bwts.invoice.service;
 
-import java.io.IOException;
-import java.security.MessageDigest;
-import java.sql.Timestamp;
-
+import com.bwts.common.exception.APIException;
+import com.bwts.invoice.exception.ErrorCodes;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.http.HttpStatus;
 
-import com.bwts.common.exception.APIException;
-import com.bwts.common.exception.ErrorCode;
+import java.security.MessageDigest;
+import java.sql.Timestamp;
 
 public class TokenHelper {
 
@@ -27,7 +25,7 @@ public class TokenHelper {
             String message = new String(new Base64().decode(tokenValue));
             return message.split(":");
         } catch (Exception e) {
-            throw new APIException(HttpStatus.FORBIDDEN, ErrorCode.WRONG_TOKEN_FORMAT, "can not decode token");
+            throw new APIException(HttpStatus.FORBIDDEN, ErrorCodes.WRONG_TOKEN_FORMAT);
         }
     }
 
