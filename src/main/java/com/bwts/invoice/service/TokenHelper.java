@@ -4,12 +4,11 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.sql.Timestamp;
 
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.http.HttpStatus;
 
 import com.bwts.common.exception.APIException;
 import com.bwts.common.exception.ErrorCode;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 public class TokenHelper {
 
@@ -25,9 +24,9 @@ public class TokenHelper {
             tokenValue = tokenValue + "=";
         }
         try {
-            String message = new String(new BASE64Decoder().decodeBuffer(tokenValue));
+            String message = new String(new Base64().decode(tokenValue));
             return message.split(":");
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new APIException(HttpStatus.FORBIDDEN, ErrorCode.WRONG_TOKEN_FORMAT, "can not decode token");
         }
     }
@@ -38,7 +37,7 @@ public class TokenHelper {
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
             byte[] tokenMessage = messageDigest.digest(data.getBytes("UTF-8"));
-            return new BASE64Encoder().encode(tokenMessage);
+            return new Base64().encodeAsString(tokenMessage);
         } catch (Exception e) {
             throw new RuntimeException("Can not encode token", e);
         }
@@ -55,7 +54,7 @@ public class TokenHelper {
         }
 
         String var4 = sb.toString();
-        sb = new StringBuilder(new BASE64Encoder().encode(var4.getBytes()));
+        sb = new StringBuilder(new Base64().encodeAsString(var4.getBytes()));
         while (sb.charAt(sb.length() - 1) == 61) {
             sb.deleteCharAt(sb.length() - 1);
         }
