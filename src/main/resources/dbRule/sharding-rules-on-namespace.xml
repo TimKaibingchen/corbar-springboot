@@ -1,0 +1,19 @@
+<rules>
+
+	<rule>
+		<namespace>Cont</namespace>
+		<shardingExpression><![CDATA[taobaoId <= 10000]]></shardingExpression>
+		<shards>partition0</shards>
+	</rule>
+	<rule>
+		<namespace>Cont</namespace>
+		<shardingExpression><![CDATA[taobaoId > 10000 and taobaoId <= 20000]]></shardingExpression>
+		<shards>partition1</shards>
+	</rule>
+	<rule>
+		<namespace>Cont</namespace>
+		<shardingExpression><![CDATA[taobaoId > 20000]]></shardingExpression>
+		<shards>partition2</shards>
+	</rule>
+
+</rules>

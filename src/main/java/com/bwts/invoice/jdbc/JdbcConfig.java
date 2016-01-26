@@ -10,14 +10,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
 
-@Configuration
 public class JdbcConfig {
 
     @Value("${database.url}") private String url;
     @Value("${database.user}") private String user;
     @Value("${database.pass}") private String pass;
 
-    @Bean
     public DataSource dataSource() {
         BasicDataSource ds = new BasicDataSource();
         ds.setUrl(url);
@@ -35,12 +33,10 @@ public class JdbcConfig {
         return new LazyConnectionDataSourceProxy(ds);
     }
 
-    @Bean
     public DataSourceTransactionManager transactionManager() {
         return new DataSourceTransactionManager(dataSource());
     }
 
-    @Bean
     public JdbcTemplate jdbcTemplate() {
         return new JdbcTemplate(dataSource());
     }

@@ -18,23 +18,13 @@ import jersey.repackaged.com.google.common.collect.Maps;
 @Service
 public class ThirdPartyService {
 
-    private final JdbcThirdPartyDao thirdPartyDao;
+    private JdbcThirdPartyDao thirdPartyDao;
 
     private Map<String, ThirdPartyDTO> thirdPartyMap = Maps.newConcurrentMap();
 
     private static final int HOUR = 1000 * 60 * 60;
 
-    @Inject
-    public ThirdPartyService(JdbcThirdPartyDao thirdPartyDao) {
-        this.thirdPartyDao = thirdPartyDao;
-    }
-
-    @PostConstruct
-    private void init() {
-        List<ThirdPartyDTO> thirdParties = thirdPartyDao.getThirdParties();
-        for (ThirdPartyDTO thirdParty : thirdParties) {
-            thirdPartyMap.put(thirdParty.getPartyCode(), thirdParty);
-        }
+    public ThirdPartyService() {
     }
 
     public Map<String, ThirdPartyDTO> getThirdPartyMap() {

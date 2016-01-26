@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 
 import com.bwts.invoice.dto.ThirdPartyDTO;
 
-@Repository
 public class JdbcThirdPartyDao {
 
     private final JdbcTemplate jdbcTemplate;

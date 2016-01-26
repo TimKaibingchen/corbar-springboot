@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd "
+       default-lazy-init="false">
+
+    <description>Spring database configuration</description>
+
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location">
+            <value>application.properties</value>
+        </property>
+    </bean>
+
+    <!-- data sources start -->
+    <bean id="dataSources" class="com.alibaba.cobar.client.datasources.DefaultCobarDataSourceService">
+        <property name="dataSourceDescriptors">
+            <set>
+                <bean class="com.alibaba.cobar.client.datasources.CobarDataSourceDescriptor">
+                    <property name="identity" value="partition0"/>
+                    <property name="targetDataSource" ref="dataSource"/>
+                    <property name="targetDetectorDataSource" ref="dataSource"/>
+                </bean>
+                <bean class="com.alibaba.cobar.client.datasources.CobarDataSourceDescriptor">
+                    <property name="identity" value="partition1"/>
+                    <property name="targetDataSource" ref="dataSource1"/>
+                    <property name="targetDetectorDataSource" ref="dataSource1"/>
+                </bean>
+                <bean class="com.alibaba.cobar.client.datasources.CobarDataSourceDescriptor">
+                    <property name="identity" value="partition2"/>
+                    <property name="targetDataSource" ref="dataSource2"/>
+                    <property name="targetDetectorDataSource" ref="dataSource2"/>
+                </bean>
+            </set>
+        </property>
+        <property name="haDataSourceCreator">
+            <bean class="com.alibaba.cobar.client.datasources.ha.FailoverHotSwapDataSourceCreator">
+                <property name="detectingSql" value="update cobarha set timeflag=CURRENT_TIMESTAMP()"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="dataSourceInitializer" class="org.springframework.boot.autoconfigure.jdbc.MyDataSourceInitializer">
+    </bean>
+
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="url" value="${jdbc0.url}" />
+        <property name="username" value="${jdbc0.username}" />
+        <property name="password" value="${jdbc0.password}" />
+        <property name="driverClassName" value="org.postgresql.Driver"/>
+        <property name="filters" value="config" />
+        <property name="maxActive" value="5" />
+        <property name="initialSize" value="5" />
+        <property name="maxWait" value="1" />
+        <property name="minIdle" value="5" />
+        <property name="timeBetweenEvictionRunsMillis" value="3000" />
+        <property name="minEvictableIdleTimeMillis" value="300000" />
+        <property name="validationQuery" value="SELECT 'x'" />
+        <property name="testWhileIdle" value="true" />
+        <property name="testOnBorrow" value="false" />
+        <property name="testOnReturn" value="false" />
+        <property name="poolPreparedStatements" value="true" />
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="20" />
+        <!-- <property name="connectionProperties" value="config.decrypt=true" /> -->
+    </bean>
+
+    <!-- data source 1 -->
+    <bean id="dataSource1" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="url" value="${jdbc1.url}" />
+        <property name="username" value="${jdbc1.username}" />
+        <property name="password" value="${jdbc1.password}" />
+        <property name="driverClassName" value="org.postgresql.Driver"/>
+        <property name="filters" value="config" />
+        <property name="maxActive" value="5" />
+        <property name="initialSize" value="5" />
+        <property name="maxWait" value="1" />
+        <property name="minIdle" value="5" />
+        <property name="timeBetweenEvictionRunsMillis" value="3000" />
+        <property name="minEvictableIdleTimeMillis" value="300000" />
+        <property name="validationQuery" value="SELECT 'x'" />
+        <property name="testWhileIdle" value="true" />
+        <property name="testOnBorrow" value="false" />
+        <property name="testOnReturn" value="false" />
+        <property name="poolPreparedStatements" value="true" />
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="20" />
+    </bean>
+
+    <!-- data source 2 -->
+    <bean id="dataSource2" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="url" value="${jdbc2.url}" />
+        <property name="username" value="${jdbc2.username}" />
+        <property name="password" value="${jdbc2.password}" />
+        <property name="driverClassName" value="org.postgresql.Driver"/>
+        <property name="filters" value="config" />
+        <property name="maxActive" value="5" />
+        <property name="initialSize" value="5" />
+        <property name="maxWait" value="1" />
+        <property name="minIdle" value="5" />
+        <property name="timeBetweenEvictionRunsMillis" value="3000" />
+        <property name="minEvictableIdleTimeMillis" value="300000" />
+        <property name="validationQuery" value="SELECT 'x'" />
+        <property name="testWhileIdle" value="true" />
+        <property name="testOnBorrow" value="false" />
+        <property name="testOnReturn" value="false" />
+        <property name="poolPreparedStatements" value="true" />
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="20" />
+    </bean>
+    <!-- data sources end -->
+
+    <!-- route rule start -->
+    <bean id="internalRouter"
+          class="com.alibaba.cobar.client.router.config.CobarInteralRouterXmlFactoryBean">
+        <property name="configLocations">
+            <list>
+                <value>classpath:/dbRule/sharding-rules-on-namespace.xml</value>
+            </list>
+        </property>
+    </bean>
+    <!-- route rule end -->
+
+    <bean id="transactionManager" class="com.alibaba.cobar.client.transaction.MultipleDataSourcesTransactionManager">
+        <property name="cobarDataSourceService" ref="dataSources"/>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+
+    <bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="configLocation">
+            <value>classpath:/sqlmap-config.xml</value>
+        </property>
+    </bean>
+
+    <bean id="sqlMapClientTemplate" class="com.alibaba.cobar.client.CobarSqlMapClientTemplate">
+        <property name="sqlMapClient" ref="sqlMapClient" />
+        <property name="cobarDataSourceService" ref="dataSources" />
+        <property name="router" ref="internalRouter" />
+        <property name="sqlAuditor">
+            <bean class="com.alibaba.cobar.client.audit.SimpleSqlAuditor" />
+        </property>
+        <property name="profileLongTimeRunningSql" value="true" />
+        <property name="longTimeRunningSqlIntervalThreshold" value="3600000" />
+    </bean>
+
+</beans>
